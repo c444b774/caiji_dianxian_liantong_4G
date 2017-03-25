@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean name="sqlForLteExtraDataServiceFTP" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[ 
+			select a.ne_not_exist_ignore,
+				   a.ne_reload_schedule,
+				   a.base_summary_file_ext,
+				   a.base_summary_file_split,
+				   a.base_summary_ok_file_ext,
+				   a.ok_file_scan_period,
+				   b.user_name,
+				   b.user_pwd,
+				   d.port,
+				   d.charset,
+				   d.passive,
+				   d.max_connections,
+				   d.max_wait_second,
+				   d.validate_cmd,
+				   b.ip,
+				   b.id
+			  from igp_lte_cdl_cfg_system a,
+				   igp_cfg_connection     b,
+				   igp_cfg_connection_ftp d
+			 where a.extra_data_service_ftp_id = b.id
+			   and b.conn_relate_id = d.id
+			 ]]></value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="sqlForLtePrimaryDB" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[ 
+			select b.user_name,
+				   b.user_pwd,
+				   d.driver,
+				   d.url,
+				   d.max_active,
+				   d.max_idle,
+				   d.max_wait 
+			  from igp_lte_cdl_cfg_system a,
+				   igp_cfg_connection     b,
+				   igp_cfg_connection_db d
+			 where b.id = a.primary_db_conn_id
+			   and b.conn_relate_id = d.id
+			 ]]></value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 插入汇总输出日志表sql -->
+	<bean name="sqlForInsertSummaryExportLogRecords" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[ INSERT INTO DS_LOG_CLT_TO_GROUP(OMCID,TASKID,DATA_TIME,DATATYPE,TABLE_NAME,BEGIN_TIME,END_TIME,TOTAL_NUM,INSERT_NUM,FAIL_NUM,IS_REPAIR,IS_CAL1,IS_CAL2,IS_CAL3,IS_CAL4,IS_CAL5,NET_TYPE) VALUES (?,?,?,?,UPPER(?),?,?,?,?,?,?,0,0,0,0,0,?) ]]></value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 根据任务id，exportid，data_time查找汇总输出日志表 -->
+	<bean name="sqlForGetSummaryExportLogRecords" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[ select count(*) from DS_LOG_CLT_TO_GROUP where taskid = ? and datatype = ? and data_time = to_date(?,'yyyymmddhh24miss') ]]></value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 查找ne_cell_l表 -->
+	<bean name="sqlForGetCellRecords" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[ SELECT NE_CELL_ID,CELL_ID,LOCALCELLID,CELL_NAME,ENB_ID,ENB_NAME,MME_ID,MME_NAME,NE_ENB_ID,NE_MME_ID,VENDOR,VENDOR_NAME,CITY_ID,CITY_NAME,COUNTY_NAME,COUNTY_ID,LTEFDD,LTETDD,EQU_MME_ID,EQU_MME_NAME,CMENEID FROM NE_CELL_L WHERE EQU_MME_ID IN (?) ]]></value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 查找ne_enb_l表 -->
+	<bean name="sqlForGetEnbRecords" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[ SELECT MME_ID,NE_ENB_ID,EQU_MME_ID,ENB_ID,ENB_NAME,MME_NAME,NE_MME_ID,CITY_ID,CITY_NAME,COUNTY_NAME,COUNTY_ID,EQU_MME_NAME,CMENEID FROM NE_ENB_L WHERE EQU_MME_ID IN (?) ]]></value>
+		</constructor-arg>
+	</bean>
+	
+</beans>

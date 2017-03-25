@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Ne Cell L solution -->
+	<bean name="cellCfgInfoExport"
+		class="cn.uway.framework.warehouse.exporter.ExportDefinition"
+		init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/extradata/EXPORT_L_CELL_CFG.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean name="solution213417111" class="cn.uway.framework.solution.GatherSolution"
+		scope="prototype">
+		<property name="accessor" ref="dbAccessor"/>
+		<property name="parser" ref="cellCfgInfoParser"/>
+		<property name="exportDefinition" ref="cellCfgInfoExport" />
+	</bean>
+	<!-- Ne Cell L solution End -->
+	
+	<!-- Nei Cell L solution(完整版，内存大) -->
+	<bean name="neicellCfgInfoExport"
+		class="cn.uway.framework.warehouse.exporter.ExportDefinition"
+		init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/extradata/EXPORT_L_NEI_CELL_CFG.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean name="solution213417112" class="cn.uway.framework.solution.GatherSolution"
+		scope="prototype">
+		<property name="accessor" ref="dbAccessor"/>
+		<property name="parser" ref="neicellCfgInfoParser"/>
+		<property name="exportDefinition" ref="neicellCfgInfoExport" />
+	</bean>
+	<!-- Nei Cell L solution End -->
+	
+	<!-- Nei Cell L solution(简化版，内存小) -->
+	<bean name="neicellCfgSimpleInfoExport"
+		class="cn.uway.framework.warehouse.exporter.ExportDefinition"
+		init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/extradata/EXPORT_L_NEI_CELL_CFG_SIMPLE.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean name="solution213417113" class="cn.uway.framework.solution.GatherSolution"
+		scope="prototype">
+		<property name="accessor" ref="dbAccessor"/>
+		<property name="parser" ref="neicellCfgSimpleInfoParser"/>
+		<property name="exportDefinition" ref="neicellCfgSimpleInfoExport" />
+	</bean>
+	<!-- Nei Cell L solution End -->
+</beans>

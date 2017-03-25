@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="igp_v3_lte" default="build_jar" basedir=".">
+	<property name="dist_dir" value="binary_dist" />
+	<property name="class_dir" value="binary_dist/classes/" />
+	<property name="lib_dir" value="../lib" />
+	<property name="jar_file_name" value="igp_v3_lte.jar" />
+
+	<!--依赖app_framework包。 -->
+	<fileset id="app_lib" dir="../app_framework/binary_dist">
+		<include name="igp_v3_app_framework.jar" />
+	</fileset>
+
+	<!-- 第三方依赖包。 -->
+        <fileset id="jar_libs" dir="${lib_dir}">
+                <include name="*.jar" />
+                <include name="*/*.jar" />
+        </fileset>
+	<!--
+	<fileset id="jar_libs" dir="${lib_dir}">
+		<include name="com.springsource.org.apache.commons.logging-1.1.1.jar" />
+		<include name="com.springsource.org.apache.log4j-1.2.15.jar" />
+		<include name="commons-dbcp-1.4.jar" />
+		<include name="commons-dbcp.jar" />
+		<include name="commons-io-2.4.jar" />
+		<include name="commons-compress-1.5.jar" />
+		<include name="commons-lang.jar" />
+		<include name="commons-net-3.3.jar" />
+		<include name="commons-pool-1.6.jar" />
+		<include name="dom4j-1.6.1.jar" />
+		<include name="logback-classic-0.9.29.jar" />
+		<include name="logback-core-0.9.29.jar" />
+		<include name="mysql-connector-java-5.1.16-bin.jar" />
+		<include name="org.springframework.asm-3.0.5.RELEASE.jar" />
+		<include name="org.springframework.beans-3.0.5.RELEASE.jar" />
+		<include name="org.springframework.context-3.0.5.RELEASE.jar" />
+		<include name="org.springframework.core-3.0.5.RELEASE.jar" />
+		<include name="org.springframework.expression-3.0.5.RELEASE.jar" />
+		<include name="slf4j-api-1.6.1.jar" />
+		<include name="classes12.jar" />
+		<include name="commons_console_1.0.jar" />
+		<include name="cglib-nodep-2.1_3.jar" />
+		<include name="wstx-asl-3.2.9.jar" />
+	</fileset>
+	-->
+	<path id="jar_classpath">
+		<fileset refid="jar_libs" />
+		<fileset refid="app_lib" />
+	</path>
+	<target name="init">
+		<delete file="${dist_dir}/${jar_file_name}" />
+		<delete dir="${class_dir}" />
+		<mkdir dir="${class_dir}" />
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="src" destdir="${class_dir}" debug="true" debuglevel="lines,vars,source">
+			<!--给编译器指定编码，防止出现："警告： 编码 UTF-8 的不可映射字符"-->
+   			<compilerarg line="-encoding UTF-8"/>
+			<classpath refid="jar_classpath" />
+		</javac>
+	</target>
+	<target name="build_jar" depends="compile">
+		<copydir dest="${class_dir}/resource/" src="src/resource" />
+		<jar basedir="${class_dir}" jarfile="${dist_dir}/${jar_file_name}" />
+		<delete dir="${class_dir}" />
+	</target>
+</project>

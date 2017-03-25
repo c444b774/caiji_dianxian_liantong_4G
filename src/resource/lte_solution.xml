@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 数据输出定义 -->
+	<!-- lte hw pm -->
+	<bean name="hwpmfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/lte_hw_pm_file_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- liantong lte hw pm xml -->
+	<bean name="liantonghwpmxml_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/liantong_lte_hw_pm_xml_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- liantong lte zte pm -->
+	<bean name="liantongztepmfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/liantong_lte_zte_pm_csv_export_v1.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- dianxin lte zte pm -->
+	<bean name="dianxinztepmfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/dianxin_lte_zte_pm_file_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 部、省接口数据下发 -->
+	<bean name="group_province_csv_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/telecom_group_province_csv_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- dianxin lte zte pm -->
+	<bean name="dianxinztepmxmlfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/dianxin_lte_zte_pm_xml_export_v1.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+
+	<!-- liantong lte hw cfc xml-->
+	<bean name="liantong_hwcfcfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/liantong_lte_hw_cm_xml_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- lte zte cfc -->
+	<bean name="ztecfcfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/liantong_lte_zte_cm_csv_export_v1.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- lte eric cm -->
+	<bean name="ericcmfile_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/lte_eric_cm_file_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+<!--  lte  新客保 -->
+	<bean name="faultsendxml_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/lte_faultsend_xml_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+    <bean name="faultsendxml_exportDefinitionV2" class="cn.uway.framework.warehouse.exporter.ExportDefinition" init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/lte_faultsend_xml_v2_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 解决方案 -->
+	<!-- db -->
+	<bean name="solution888888888" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="dbAccessor" />
+		<property name="parser" ref="dbParser" />
+	</bean>
+	
+	<bean name="solution888888889" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="dbAccessor" />
+		<property name="parser" ref="extendDBParser" />
+	</bean>
+	<!-- csv file -->
+	<bean name="solution666666666" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="csvParser" />
+	</bean>
+	
+	<bean name="solution666666667" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="mobileMonitorCsvParser" />
+	</bean>
+	
+	<!-- lte hw pm(CSV) -->
+	<bean name="solution131228011" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_pm_file_parser" />
+		<property name="exportDefinition" ref="hwpmfile_exportDefinition" />
+		
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	<!-- liantong lte hw pm xml -->
+	<bean name="solution131228014" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_pm_xml_file_parser" />
+		<property name="exportDefinition" ref="liantonghwpmxml_exportDefinition" />
+		
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	
+	
+	<!-- liantong lte hw pm xml(zip) -->
+	<bean name="solution131228015" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="localAccessor" />
+		<property name="parser" ref="hw_pm_xml_zip_file_parser" />
+	</bean>
+	
+	<bean name="solution131228018" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_pm_xml_file_adapt_parser" />
+		<property name="exportDefinition" ref="liantonghwpmxml_exportDefinition" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- dianxin lte zte pm -->
+	<bean name="solution131228021" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_pm_file_parser" />
+		<property name="exportDefinition" ref="dianxinztepmfile_exportDefinition" />
+	</bean>
+	
+	<!-- 部、省接口数据下发 -->
+	<bean name="solution108111601" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="group_province_csv_parser" />
+		<property name="exportDefinition" ref="group_province_csv_exportDefinition" />
+	</bean>
+	
+	<!-- dianxin lte zte pm xml(zip)-->
+	<bean name="solution131228029" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_pm_xml_file_parser" />
+		<property name="exportDefinition" ref="dianxinztepmxmlfile_exportDefinition" />
+	</bean>
+	
+	<!-- dianxin lte zte cm xml(zip)-->
+	<bean name="solution131228030" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_cm_xml_file_parser" />
+		<property name="exportDefinition" ref="dianxinztepmxmlfile_exportDefinition" />
+	</bean>
+	
+	<!-- liantong lte zte pm -->
+	<bean name="solution131228023" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_pm_file_parser" />
+		<property name="exportDefinition" ref="liantongztepmfile_exportDefinition" />
+	</bean>
+
+	<!-- liantong lte hw cfc xml -->
+	<bean name="solution131228013" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_cfc_xml_file_parser" />
+		<property name="exportDefinition" ref="liantong_hwcfcfile_exportDefinition" />
+		
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+			
+	</bean>
+	
+	<!-- liantong lte hw cfc xml(电信xml参数) -->
+	<bean name="solution131228019" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="dx_hw_cfc_xml_file_parser" />
+		<property name="exportDefinition" ref="liantong_hwcfcfile_exportDefinition" />
+		
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+			
+	</bean>
+	
+	<!-- liantong lte hw cm guangdong csv -->
+	<bean name="solution131228016" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_cm_csv_file_parser" />
+	</bean>
+	<!-- liantong lte hw pm guangdong csv -->
+	<bean name="solution131228017" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_pm_csv_file_parser" />
+	</bean>
+	<!-- lte zte cfc -->
+	<bean name="solution131228022" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_cfc_file_parser" />
+		<property name="exportDefinition" ref="ztecfcfile_exportDefinition" />
+	</bean>
+	<!-- lte eric cm -->
+	<bean name="solution140523001" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="eric_cm_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte eric cm(电信) -->
+	<bean name="solution140523004" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="dx_eric_cm_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte eric pm -->
+	<bean name="solution140523002" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="eric_pm_file_parser" />
+	</bean>
+	
+	<!-- lte eric pm(zip) -->
+	<bean name="solution140523003" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="eric_pm_zip_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte中兴单板参数 -->
+	<bean name="solution408041103" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_zte_dxdb_xml_parser" />
+	</bean>
+	
+	
+	<!-- lte alu cm -->
+	<bean name="solution140528001" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="alu_cm_file_parser" />
+	</bean>
+	<!-- lte alu pm -->
+	<bean name="solution140528002" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="alu_pm_file_parser" />
+	</bean>
+	
+    <!-- w alu pm -->
+	<bean name="solution308061201" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="w_alu_pm_file_parser" />
+	</bean>
+	
+	<!-- lte alu pm(zip) -->
+	<bean name="solution140528003" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="localAccessor" />
+		<property name="parser" ref="alu_pm_zip_file_parser" />
+	</bean>
+	
+     <!-- lte alu pm(tar) -->
+	<bean name="solution140810003" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="alu_pm_tar_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte nokia cm -->
+	<bean name="solution140529001" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="nokia_cm_file_parser" />
+	</bean>
+	<!-- lte nokia pm -->
+	<bean name="solution140529002" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="nokia_pm_file_parser" />
+	</bean>
+	<!-- lte nokia pm local file -->
+	<bean name="solution140529003" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="localAccessor" />
+		<property name="parser" ref="nokia_pm_file_parser" />
+	</bean>
+	<!-- lte nokia cdr xml add 2015-06-11-->
+	<bean name="solution140529004" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+		<property name="parser" ref="nokia_cdr_xml_file_parser" />
+	</bean>
+	<!-- lte nokia pm 2016年9月29日 15:54:34 diao-->
+	<bean name="solution140529005" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		 <property name="parser" ref="nokia_pm_file_proMix_parser" /> 
+	</bean>
+
+	
+	<!-- wcdma hebei huawei cm -->
+	<bean name="solution69001001" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_cfc_xml_file_parser" />
+	</bean>
+	
+	<!--大唐pm --> 
+	<bean name="solution83080201" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="dt_pm_xml_file_parser" />
+	</bean>	
+	
+	<!--大唐cm -->
+	<bean name="solution83080202" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="dt_cm_xml_file_parser" />
+	</bean>	
+	
+	<!--普天pm -->
+	<bean name="solution83080501" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="pt_pm_txt_file_parser" />
+	</bean>	
+	
+	<!--普天cm -->
+	<bean name="solution83080502" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="dt_cm_cds_file_parser" />
+	</bean>
+	
+	<!-- lte zte cdt csv -->
+	<bean name="solution408041320" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_cdt_csv_file_public_parser" />
+		<!-- 因为中兴的文件都是碎文件，要达到最优解码和imsi关联性能，需关闭掉自适应流应用框架 -->
+		<property name="adaptiveStreamJobAvaliable" value="false" />
+	</bean>
+	
+	<!-- lte hw cdt csv 2 , 华为无线网话单入impala-->
+	<bean name="solution408081322" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_cdt_csv_file_public_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte hw cdt csv  , 爱立信无线网话单入impala-->
+	<bean name="solution408081323" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="ericsson_cdt_csv_file_public_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte fh(烽火) pm xml -->
+	<bean name="solution408031200" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="fh_pm_xml_file_parser" />
+		<!-- 山东王永慧那里文件已经由原来的gz变成为tar.gz，所以添加此配置 -->
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte fh cm xml -->
+	<bean name="solution408031130" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="fh_cm_xml_file_parser" />
+	</bean>
+	
+	<!-- lte fh  cm xn格式xml -->
+	<bean name="solution408031131" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="fh_cm_xn_xml_file_parser" />
+		<!-- 可自动适配的流 -->
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+<!-- 	lte 新客保  http xml -->
+	<bean name="solution400001800" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="httpAccessor"/>
+		<property name="parser" ref="faultSendXmlParser"/>
+		<property name="exportDefinition" ref="faultsendxml_exportDefinition" />
+	</bean>
+	<!-- 	lte 新客保  ftp xml -->
+	<bean name="solution400001801" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor"/>
+		<property name="parser" ref="faultSendXmlV2Parser"/>
+		<property name="exportDefinition" ref="faultsendxml_exportDefinitionV2" />
+	</bean>
+	
+	
+	<!-- 定义数据输出配置 配置文件 -->
+	<!--
+	<bean name="download_parser_exportDefinition" class="cn.uway.framework.warehouse.exporter.ExportDefinition"
+		init-method="parseExportTemplet" scope="prototype">
+		<constructor-arg name="exportDefinitionXmlPath">
+			<list value-type="java.lang.String">
+				<value>./template/export/lte/common/default_export.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	-->	
+	
+	<!-- 文件下载solution, 只将原始文件下载，并全部解压到本地 -->
+	<!--
+	<bean name="solution10000" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="file_download_parser" />
+		
+		<property name="exportDefinition" ref="download_parser_exportDefinition" />
+		
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	-->	
+	
+	<!-- lte mre/mro solution -->
+	<bean name="solution408001700" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_mre_mro_xml_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>	
+	
+	<!-- lte mrs xml -->
+	<bean name="solution400001600" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="mrs_xml_file_parser" /> 
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte hw cdr csv -->
+	<bean name="solution408081320" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_cdr_csv_file_parser" />
+	</bean>
+	
+	<!-- lte hw cdr csv2 -->
+	<bean name="solution408081321" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="hw_cdr_csv_file_parserV2" />
+	</bean>
+	
+	<!-- lte bell cdr csv -->
+	<bean name="solution408061320" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="bell_cdr_csv_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- lte/cdma mobile onekey xml -->
+	<bean name="solution408001600" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="mod_mobile_onekey_xml_file_parser" />
+	</bean>
+	
+	<!-- lte 移动信安态势xml解析 -->
+	<bean name="solution508001701" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_chinamobile_monitor_xml_file_parser" />
+	</bean>	
+	
+	<!-- lte 华为核心网话单采集 -->
+	<bean name="solution408081301" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_hw_cdt_xml_parser" />
+	</bean>	
+	
+	<!-- lte 华为核心网话单采集，没有返回值的解决方案 -->
+	<bean name="solution408081302" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_hw_cdt_xml_withoutrecord_parser" />
+	</bean>	
+	
+	<!-- lte 中兴核心网话单采集 -->
+	<bean name="solution408081401" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_zte_coreNet_csv_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>	
+	<!-- lte 中兴核心网话单采集，没有返回值的解决方案 -->
+	<bean name="solution408081402" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="lte_zte_coreNet_csv_file_withoutrecord_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>	
+	
+	<!-- lte 中兴无线网 -->
+	<bean name="solution23122111" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="zte_cdt_csv_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+	<!-- hive test solution -->
+	<bean name="HiveDBParser" class="cn.uway.framework.parser.AdaptRemoteFileExportDBParser" scope="prototype">
+	</bean>
+	
+	<bean name="solution1601150201" class="cn.uway.framework.solution.GatherSolution"
+		scope="prototype">
+		<property name="accessor" ref="dbAccessor"/>
+		<property name="parser" ref="HiveDBParser"/>
+	</bean>
+	<!-- hive test solution-->
+	
+	<!-- lte nokia cdr csv -->
+	<bean name="solution408071320" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="nokia_csv_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
+	</bean>
+	
+</beans>

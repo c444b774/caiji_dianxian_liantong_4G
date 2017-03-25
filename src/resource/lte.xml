@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<!-- LTE 配置 -->
+	<bean name="externalLoader" class="cn.uway.igp.lte.extraDataCache.LteExternalDatasLoader" />
+	<bean name="lteSystemConfigDAO" class="cn.uway.igp.lte.dao.LteSystemConfigDAO">
+		<property name="datasource" ref="datasource" />
+		<property name="sqlForLteExtraDataServiceFTP" ref="sqlForLteExtraDataServiceFTP" />
+	</bean>
+	<bean name="mrCommonConfig" class="cn.uway.igp.lte.context.common.CommonSystemConfigMgr" init-method="loadDBConfig">
+		<property name="lteSystemConfigDAO" ref="lteSystemConfigDAO" />
+	</bean>
+	
+	<bean name="extraDataFactor" class="java.lang.Float">
+		<constructor-arg type="java.lang.String">
+			<value>0.7</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 将程序上次关闭时未输出完成的igp_data_gather_obj_status表status设置为0 标记需要重新采集 -->
+	<bean name="taskInitializater" class="cn.uway.framework.task.TaskInitializater" init-method="revertGatherStatusOfLastShutdown">
+		<property name="statusDAO" ref="statusDAO"/>
+		<property name="pid" value="${system.pid}" />
+	</bean>
+	
+	<!--
+	<bean name="externalLoader" class="cn.uway.igp.extraDataCache.LteExternalDatasLoader">
+		<property name="neInfoCache" ref="neInfoCache" />
+	</bean>-->
+	<!-- 重汇模块
+	<bean name="reSummary" class="cn.uway.framework.summary.ReSummary">
+		<property name="taskQueue" ref="taskQueue" />
+		<property name="taskDao" ref="taskDAO" />
+		<property name="summaryDBLogger" ref="summaryDBLogger" />
+	</bean>
+	
+	<bean name="exportFileDir" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${system.summary.exportFileDir}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="exportFileExtendName" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${system.summary.exportFileExtendName}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="mmeIds" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${system.neDataLoader.mmeIds}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="relationShipKeysGroup" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${system.neData.relationShipKeysGroup}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="neInfoCache" class="cn.uway.igp.extraDataCache.cache.NeInfoCache">
+		<property name="mmeIds" ref="mmeIds" />
+		<property name="relationShipKeysGroup" ref="relationShipKeysGroup" />
+		<property name="dataSource" ref="jdbcConnection" />
+		<property name="sqlForGetCellRecords" ref="sqlForGetCellRecords" />
+		<property name="sqlForGetEnbRecords" ref="sqlForGetEnbRecords" />
+	</bean>
+	
+	<bean name="summaryDBLogger" class="cn.uway.framework.log.SummaryDBLogger">
+		<property name="dataSource" ref="jdbcConnection" />
+		<property name="sqlForInsertSummaryExportLogRecords" ref="sqlForInsertSummaryExportLogRecords" />
+		<property name="sqlForGetSummaryExportLogRecords" ref="sqlForGetSummaryExportLogRecords" />
+	</bean>-->
+	
+	
+	<!-- CDMA HBASE输出配置项 -->
+	<bean name="HbaseConfig" class="cn.uway.framework.warehouse.exporter.hbaseExporterConf.HBaseExportDBConf">
+		<constructor-arg type="java.lang.String">
+			<value>./conf/lte_export_table_hbase_conf.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 统一服务文件编码 -->
+	<bean name="neFileEncode" class="java.lang.String" lazy-init="true">
+		<constructor-arg type="java.lang.String">
+			<value>${neFileEncode}</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte核心网输出公共数据配置项 -->
+	<bean name="lteCoreCommonDataWriteConfig" class="cn.uway.igp.lte.service.LteCoreCommonDataManager" scope="prototype" lazy-init="true" init-method="init">
+		<property name="cacheFileDir" value="${system.lte.coreCommonData.cacheFileDir}" />
+		<property name="timeWinOfMinute" value="${system.lte.coreCommonData.timeWin}" />
+		<property name="validOfHour" value="${system.lte.coreCommonData.validHour}" />
+		<property name="blockInMemoryHour" value="${system.lte.coreCommonData.blockInMemoryHour}" />
+	</bean>
+	
+	<!-- lte核心网读取公共数据配置项 -->
+	<bean name="lteCoreCommonDataReadConfig" class="cn.uway.igp.lte.service.LteCoreCommonDataManager" scope="prototype" lazy-init="true"  init-method="init">
+		<property name="cacheFileDir" value="${system.lte.coreCommonData.cacheFileDir}" />
+		<property name="timeWinOfMinute" value="${system.lte.coreCommonData.timeWin}" />
+		<property name="validOfHour" value="${system.lte.coreCommonData.validHour}" />
+		<property name="blockInMemoryHour" value="${system.lte.coreCommonData.blockInMemoryHour}" />
+	</bean>
+	
+	<!-- mr关联最少邻区数 -->
+	<bean name="minOrientNeiCellsNumber" class="java.lang.String" lazy-init="true">
+		<constructor-arg type="java.lang.String">
+			<value>${system.lte.mr.minOrientNeiCellsNumber}</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="externalService" class="cn.uway.igp.lte.service.ImsiJoinService" lazy-init="true" init-method="init" scope="prototype">
+		<property name="currDistributeServerIndex" value="${system.lte.imsiQueryService.currDistributeServerIndex}" />
+		<property name="distributeServers" value="${system.lte.imsiQueryService.distributeServers}" />
+	</bean>
+	
+	<bean name="debugLevel" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${system.debugLevel}</value>
+		</constructor-arg>
+	</bean>
+	
+	<!--lte 网元刷新间隔,默认为5秒 -->
+	<bean name="neRefreshInterval" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${system.ne.refresh.interval}</value>
+		</constructor-arg>
+	</bean>
+	<!-- 2016年11月16日 15:18 lte mro,mre 数据关联从网元中关联不到city_id的记录的丢弃开关,默认为开启,
+	只能配置为n才能关闭,丢弃的记录写进badwriter里-->
+	<bean name="LteMREONotAssociateCityIdDiscard" class="java.lang.String">
+		<constructor-arg type="java.lang.String">
+			<value>${LteMREONotAssociateCityIdDiscard}</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- MD5加密配置 -->
+	<bean name="md5Members" class="java.lang.String">
+		<constructor-arg>
+			<value type="java.lang.String">${system.lte.cdr.md5.members}</value>
+		</constructor-arg>
+	</bean>
+</beans>

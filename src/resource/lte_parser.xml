@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- db -->
+	<bean name="dbParser" class="cn.uway.framework.parser.DBParser" scope="prototype"/>
+	
+	<bean name="extendDBParser" class="cn.uway.framework.parser.ExtendDBParser" scope="prototype"/>
+	
+	<!-- csv,file -->
+	<bean name="csvParser" class="cn.uway.framework.parser.file.CSVParser" scope="prototype"/>
+	
+		<!--MobileMonitorCsvParser csv,file -->
+	<bean name="mobileMonitorCsvParser" class="cn.uway.igp.lte.parser.other.MobileMonitorCsvParser" scope="prototype"/>
+	
+	<bean name="faultSendXmlParser" class="cn.uway.igp.lte.parser.other.FaultSendXmlParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/lte_faultsend_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean name="faultSendXmlV2Parser" class="cn.uway.igp.lte.parser.other.FaultSendXmlV2Parser" scope="prototype">		
+		<constructor-arg>
+			<value>./template/parser/lte/lte_faultsend_xml_v2_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+
+	<!-- lte hw pm,file -->
+	<bean name="hw_pm_file_parser" class="cn.uway.igp.lte.parser.pm.hw.HwCSVParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/lte_hw_pm_file_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte hw pm xml,file -->
+	<bean name="hw_pm_xml_file_parser" class="cn.uway.igp.lte.parser.pm.hw.HwPmXMLParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/liantong_lte_hw_pm_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+		<!-- lte hw pm xml,file -->
+	<bean name="hw_pm_xml_file_adapt_parser" class="cn.uway.igp.lte.parser.pm.hw.HwPmXMLAdaptParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/liantong_lte_hw_pm_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	
+	<!-- lte hw pm xml(zip),file -->
+	<bean name="hw_pm_xml_zip_file_parser" class="cn.uway.igp.lte.parser.pm.hw.HwPmZipXMLParser" scope="prototype"/>
+	
+	<!-- lte zte pm,file -->
+	<bean name="zte_pm_file_parser" class="cn.uway.igp.lte.parser.pm.zte.ZteCSVParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/liantong_lte_zte_pm_csv_parse_v1.xml</value>
+		</constructor-arg>
+	</bean>
+	<!-- 部、省接口数据下发 -->
+	<bean name="group_province_csv_parser" class="cn.uway.framework.parser.file.CSVParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/telecom_group_province_csv_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte zte pm(xml),file -->
+	<bean name="zte_pm_xml_file_parser" class="cn.uway.igp.lte.parser.pm.zte.ZteXmlParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/dianxin_lte_zte_pm_xml_parse_v1.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte zte cm(xml),file -->
+	<bean name="zte_cm_xml_file_parser" class="cn.uway.igp.lte.parser.cm.ZteXmlParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/dianxin_lte_zte_cm_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	
+	<!-- lte hw cfc xml,file -->
+	<bean name="hw_cfc_xml_file_parser" class="cn.uway.igp.lte.parser.unicome.hw.HwCmXMLParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/liantong_lte_hw_cm_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte hw cfc xml,file(电信xml参数) -->
+	<bean name="dx_hw_cfc_xml_file_parser" class="cn.uway.igp.lte.parser.unicome.hw.DxHwCmXMLParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/liantong_lte_hw_cm_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte hw cm guangdong csv,file -->
+	<bean name="hw_cm_csv_file_parser" class="cn.uway.igp.lte.parser.cm.HwCmCSVGdParser" scope="prototype" />
+	
+	<!-- lte hw pm guangdong csv,file -->
+	<bean name="hw_pm_csv_file_parser" class="cn.uway.igp.lte.parser.pm.hw.HwPmCSVGdParser" scope="prototype" />
+	
+	<!-- lte zte cfc,file -->
+	<bean name="zte_cfc_file_parser" class="cn.uway.igp.lte.parser.cfc.zte.ZteCfcCSVParser" scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/liantong_lte_zte_cm_csv_parse_v1.xml</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- lte eric cm,file -->
+	<bean name="eric_cm_file_parser" class="cn.uway.igp.lte.parser.cm.EricCmXMLParser" scope="prototype"/>
+	
+	<!-- lte eric cm,file -->
+	<bean name="dx_eric_cm_file_parser" class="cn.uway.igp.lte.parser.cm.DxEricCmXMLParser" scope="prototype"/>
+	
+	<!-- lte eric pm,file -->
+	<bean name="eric_pm_file_parser" class="cn.uway.igp.lte.parser.pm.eric.EricPmXMLParser" scope="prototype"/>
+	
+	<!-- lte eric pm(zip),file -->
+	<bean name="eric_pm_zip_file_parser" class="cn.uway.igp.lte.parser.pm.eric.EricPmZipXMLParser" scope="prototype"/>
+		
+	<!-- lte alu cm,file -->
+	<bean name="alu_cm_file_parser" class="cn.uway.igp.lte.parser.cm.LucCmXMLParser" scope="prototype"/>
+	
+	<!-- lte alu pm,file -->
+	<bean name="alu_pm_file_parser" class="cn.uway.igp.lte.parser.pm.alu.LucPmXMLParser" scope="prototype"/>
+	
+	<!-- w alu pm,file -->
+	<bean name="w_alu_pm_file_parser" class="cn.uway.igp.lte.parser.unicome.alu.WLucPmXMLParser" scope="prototype"/>
+	
+	<!-- lte alu pm(zip),file -->
+	<bean name="alu_pm_zip_file_parser" class="cn.uway.igp.lte.parser.pm.alu.LucPmZipXMLParser" scope="prototype"/>
+	
+	<!-- lte alu pm(tar),file -->
+	<bean name="alu_pm_tar_file_parser" class="cn.uway.igp.lte.parser.pm.alu.LucPmTarXMLParser" scope="prototype"/>
+	
+	
+	<!-- lte nokia cm,file -->
+	<bean name="nokia_cm_file_parser" class="cn.uway.igp.lte.parser.cm.NokiaCmXMLParser" scope="prototype"/>
+	
+	<!-- lte nokia pm,file -->
+	<bean name="nokia_pm_file_parser" class="cn.uway.igp.lte.parser.pm.nokia.NokiaPmXMLParser" scope="prototype"/>
+	
+	<!-- lte nokia pm,file 2016年9月28日 16:35:56 diao-->
+	<bean name="nokia_pm_file_proMix_parser" class="cn.uway.igp.lte.parser.pm.nokia.NokiaPmXMLProMixPaser" scope="prototype"/>
+	
+	<!-- lte nokia cdr,xml file add 2015-06-11-->
+	<bean name="nokia_cdr_xml_file_parser" class="cn.uway.igp.lte.parser.cdr.nokia.NokiaCdrXMLParser" scope="prototype"/>
+	
+	<!--大唐lte dt_pm_xml_file_parser -->
+	<bean name="dt_pm_xml_file_parser" class="cn.uway.igp.lte.parser.pm.dt.DtPmXMLParser" scope="prototype"/>
+	
+	<!--大唐lte dt_cm_xml_file_parser -->
+	<bean name="dt_cm_xml_file_parser" class="cn.uway.igp.lte.parser.cm.DtCmXMLParser" scope="prototype"/>
+	
+	<!--普天lte pt_pm_txt_file_parser -->
+	<bean name="pt_pm_txt_file_parser" class="cn.uway.igp.lte.parser.pm.pt.PtPmTXTParser" scope="prototype"/>
+	
+	<!--普天lte dt_cm_cds_file_parser -->
+	<bean name="dt_cm_cds_file_parser" class="cn.uway.igp.lte.parser.cm.PtCmCDSParser" scope="prototype"/>
+	
+	<!-- lte zte cdt csv,file -->
+	<bean name="zte_cdt_csv_file_parser" class="cn.uway.igp.lte.parser.cdt.ZteCdtCsvParser" scope="prototype" />
+	
+	<!-- lte zte cdt csv,file -->
+	<bean name="zte_cdt_csv_file_public_parser" class="cn.uway.igp.lte.parser.cdt.ZteCdtCsvPublicParser" scope="prototype" />
+	
+	<!-- lte hw cdt csv,file -->
+	<bean name="hw_cdt_csv_file_public_parser" class="cn.uway.igp.lte.parser.cdt.HwCdtCsvPublicParser" scope="prototype" />
+	
+		<!-- lte ericsson cdt csv,file -->
+	<bean name="ericsson_cdt_csv_file_public_parser" class="cn.uway.igp.lte.parser.cdt.EricssonCdtCsvPublicParser" scope="prototype" />
+	
+	<!-- lte fh(烽火) pm xml,file -->
+	<bean name="fh_pm_xml_file_parser" class="cn.uway.igp.lte.parser.pm.fh.FhPmXMLParser" scope="prototype"/>
+	
+	<!-- 烽火lte cm xml,file -->
+	<bean name="fh_cm_xml_file_parser" class="cn.uway.igp.lte.parser.cm.FhCmXMLParser" scope="prototype" />
+	
+	<!-- 烽火lte cm xml,file -->
+	<bean name="fh_cm_xn_xml_file_parser" class="cn.uway.igp.lte.parser.cm.FhCmNSXMLParser" scope="prototype" />
+	
+	<!-- 文件下载parser -->
+	<!--
+	<bean name="file_download_parser" class="cn.uway.igp.lte.parser.mr.FileDownloadParser" scope="prototype"/>
+	-->
+	
+	<!--lte_mre_mro_xml_file_parser -->
+	<bean name="lte_mre_mro_xml_file_parser" class="cn.uway.igp.lte.parser.mr.LteMREOXmlParser" scope="prototype"/>
+	<!-- lte mrs xml,file -->
+	<bean name="mrs_xml_file_parser" class="cn.uway.igp.lte.parser.mr.MRSXmlParser" scope="prototype" />
+	
+	<!-- lte hw cdr csv,file -->
+	<bean name="hw_cdr_csv_file_parser" class="cn.uway.igp.lte.parser.cdt.HwCdrGzCsvParser" scope="prototype" />
+	
+	<bean name="hw_cdr_csv_file_parserV2" class="cn.uway.igp.lte.parser.cdt.HwCdrCsvParserV200R014C00" scope="prototype" />
+	
+	<!-- lte bell cdr csv,file -->
+	<bean name="bell_cdr_csv_file_parser" class="cn.uway.igp.lte.parser.cdt.BellCdrCsvParser" scope="prototype" />
+	
+	<!-- lte/cdma mobile onekey xml,file -->
+	<bean name="mod_mobile_onekey_xml_file_parser" class="cn.uway.igp.lte.parser.mobile.MobileOneKeyParser" scope="prototype" />
+	
+	<!-- lte 移动信安态势xml解析 -->
+	<bean name="lte_chinamobile_monitor_xml_file_parser" class="cn.uway.igp.lte.parser.other.MobileMonitor" scope="prototype" />
+	
+	<!--  lte 中兴单板参数-->
+	<bean name="lte_zte_dxdb_xml_parser" class="cn.uway.igp.lte.parser.cm.ZteDXDBXmlParser"  scope="prototype">
+		<constructor-arg>
+			<value>./template/parser/lte/dianxin_lte_zte_db_xml_parse.xml</value>
+		</constructor-arg>
+	</bean>
+	<!-- <bean name="lte_zte_dxdb_xml_parser" class="cn.uway.igp.lte.parser.pm.zte.ZteDXDBXmlParser" scope="prototype" />-->
+	
+	<!--  lte 华为核心网话单采集-->
+	<bean name="lte_hw_cdt_xml_parser" class="cn.uway.igp.lte.parser.cdt.HwCdtCsvParser"  scope="prototype" />
+	
+	<!--  lte 华为核心网话单采集,没有返回值的解析类-->
+	<bean name="lte_hw_cdt_xml_withoutrecord_parser" class="cn.uway.igp.lte.parser.cdt.HwCdtCsvWithoutRecordParser"  scope="prototype" />
+	
+	<!--  lte 中兴核心网话单采集-->
+	<bean name="lte_zte_coreNet_csv_file_parser" class="cn.uway.igp.lte.parser.cdt.ZteCoreNetCsvFileParser"  scope="prototype" />
+	
+	<!--  lte 中兴核心网话单采集,没有返回值的解析类-->
+	<bean name="lte_zte_coreNet_csv_file_withoutrecord_parser" class="cn.uway.igp.lte.parser.cdt.ZteCoreNetCsvFileWithoutRecordParser"  scope="prototype" />
+	
+	<!--lte 诺西话单-->
+	<bean name="nokia_csv_file_parser" class="cn.uway.igp.lte.parser.cdr.nokia.NokiaCdrCsvParser" scope="prototype"/>
+</beans>
