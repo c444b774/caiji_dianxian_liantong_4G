@@ -128,17 +128,24 @@ public class HwCdtCsvPublicParser extends FileParser implements ImsiQueryHelper.
 	 */
 	private boolean isFirstFileToParse = true;
 	
-	private static List<String> sourceFields = null;
+private static List<String> sourceFields = null;
 	
 	private static List<String> encryptFields = null;
 	
+	private static List<String> types = null;
+	
 	static{
-		if("y".equalsIgnoreCase(AppContext.getBean("cdrEncryptSwitch", String.class)) 
-				&& AppContext.getBean("md5Members", String.class) != null){
-			sourceFields = Arrays.asList(AppContext.getBean("md5Members", String.class).split(","));
-			encryptFields = new ArrayList<String>(sourceFields.size());
-			for(String fields:sourceFields){
-				encryptFields.add(fields+"_MD5");
+		if("y".equals(AppContext.getBean("cdrEncryptSwitch", String.class))
+				&& AppContext.getBean("lteMembers", String.class) != null){
+			String[] fields = AppContext.getBean("lteMembers", String.class).split(",");
+			sourceFields = new ArrayList<String>(fields.length);
+			types = new ArrayList<String>(fields.length);
+			encryptFields = new ArrayList<String>(fields.length);
+			for(String field:fields){
+				String[] params = StringUtils.split(field,":");
+				sourceFields.add(params[0]);
+				types.add(params[1]);
+				encryptFields.add(params[0]+"_MD5");
 			}
 		}
 	}
@@ -365,7 +372,7 @@ public class HwCdtCsvPublicParser extends FileParser implements ImsiQueryHelper.
 	@Override
 	public ParseOutRecord nextRecord() throws Exception {
 		ParseOutRecord record = imsiQueryHelper.getMatchedRecord();
-		this.encryptFields(record.getRecord(),sourceFields, encryptFields);
+		this.encryptFields(record.getRecord(),sourceFields, encryptFields,types);
 		readLineNum++;
 		return record;
 	}
@@ -550,6 +557,9 @@ public class HwCdtCsvPublicParser extends FileParser implements ImsiQueryHelper.
 		
 		// 标记解析结束时间
 		this.endTime = new Date();
+		if(this.dics != null && this.dics.size() > 0){
+			cache.put(dics);
+		}
 		LOGGER.debug("[{}]-华为cdr解析，处理{}条记录", new Object[]{task.getId(), readLineNum});
 	}
 

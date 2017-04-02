@@ -5,10 +5,14 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -20,7 +24,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -393,15 +397,20 @@ public class LteMREOXmlParser extends FileParser {
 		String rsrp = map.get("MR.LTESCRSRP");
 		// 邻区
 		String ncRsrp = map.get("MR.LTENCRSRP");
+		//主小区频点
+		String srcEarfcn = map.get("MR.LTESCEARFCN");
+		//频点
+		String ncEarfnc = map.get("MR.LTENCEARFCN");
+		String[] ncEarfcn = null != ncEarfnc ? ncEarfnc.split(neFieldSplitChar) : null;
 		int maxIndex = -1;
 		if (ncRsrp != null) {
 			String[] ncRsrpAry = ncRsrp.split(neFieldSplitChar);
-			maxIndex = getMaxRSRPIndex(rsrp, ncRsrpAry);
+			List<Integer> maxIndexList = getMaxRSRPIndex(rsrp,srcEarfcn, ncRsrpAry,ncEarfcn);
 			/*
 			 * 处理邻区数据，邻小区数据取自以下字段（需对齐拆分，如果一个MRO采样中包含n个邻区，则拆分成n行录入MRO分频详单表） MR_LTENCPCI MR_LTENCEARFCN MR_LTENCRSRP MR_LTENCRSRQ
 			 */
 			String[] ncPci = map.get("MR.LTENCPCI").split(neFieldSplitChar);
-			String[] ncEarfcn = map.get("MR.LTENCEARFCN").split(neFieldSplitChar);
+			
 			String[] ncRsrq = map.get("MR.LTENCRSRQ").split(neFieldSplitChar);
 			for (int i = 0; i < ncPci.length; i++) {
 				Map<String, String> cellDataMap = new HashMap<>();
@@ -409,7 +418,7 @@ public class LteMREOXmlParser extends FileParser {
 				cellDataMap.put("EARFCN", ncEarfcn[i]);
 				cellDataMap.put("RSRP", ncRsrpAry[i]);
 				cellDataMap.put("RSRQ", ncRsrq[i]);
-				if (maxIndex == i && !StringUtils.isBlank(ncRsrpAry[i])) {
+				if (maxIndexList.contains(i) && !StringUtils.isBlank(ncRsrpAry[i])) {
 					/** MARK为自定义类型，当前定义：1，rsrp最大的那个值 */
 					cellDataMap.put("MARK", "1");
 				}
@@ -432,30 +441,81 @@ public class LteMREOXmlParser extends FileParser {
 	}
 
 	/**
-	 * 获取小区、邻区中最大rsrp对应的索引
+	 * 获取小区、邻区中各频点中最大rsrp对应的索引
 	 * 
-	 * @param rsrp
+	 * @param srcrsrp 主小区rsrp
+	 * @param srcEarfcn 主小区频点
 	 * @param ncRsrp
+	 * @param ncEarfcn 
 	 * @return
 	 */
-	private int getMaxRSRPIndex(String rsrp, String[] ncRsrp) {
-		int index = -1;
-		float maxvalue  =0f;
-		if(!StringUtils.isBlank(rsrp))
-			maxvalue = Float.valueOf(rsrp);
-		 
-		if (null != rsrp && ncRsrp.length > 0) {
-			for (int i = 0; i < ncRsrp.length; i++) {
-				if ("".equals(ncRsrp[i].trim()))
-					continue;
-				float tem = Float.valueOf(ncRsrp[i]);
-				if (tem > maxvalue) {
-					maxvalue = tem;
-					index = i;
-				}
+	private List<Integer> getMaxRSRPIndex(String srcrsrp,String srcEarfcn, String[] ncRsrp,String[] ncEarfcn) {
+		float srcrsrpvalue  =0f;
+		if(!StringUtils.isBlank(srcrsrp))
+			srcrsrpvalue = Float.valueOf(srcrsrp);
+		
+		List<Integer> lastIndex = new ArrayList<Integer>();
+		Set<String>  set=new HashSet<String>(); 
+		//得到不重复的所有频点
+		if(null != ncEarfcn){
+			for(int i=0;i<ncEarfcn.length;i++){
+				set.add(ncEarfcn[i]);
 			}
 		}
-		return index;
+		
+		List<List<Integer>> ll = new ArrayList<List<Integer>>();
+		int p = 0 ;
+		for( Iterator   it = set.iterator();  it.hasNext(); )  
+		{               
+			String earfcn = it.next().toString();
+			//记录本次earfcn值下标
+			List<Integer> indexL = new ArrayList<Integer>();
+			for(int i=0;i<ncEarfcn.length;i++){
+				if(p == 0 && ncEarfcn[i].equals(srcEarfcn) 
+						&& srcEarfcn.equals(earfcn) && !indexL.contains(-2)){
+					indexL.add(-2);
+					p =1;
+				}
+				if(ncEarfcn[i].equals(earfcn) ){
+					indexL.add(i);
+				}
+			}
+			ll.add(indexL);
+		}
+		 
+		//标识如果主小区频点与其它任一小区的频点都不一样的情况下，那他自已肯定是最大那条rsrp
+		int mainMark = 0;
+		for(List<Integer>  l : ll){
+			int lindex = -1;
+			float tempRsrp = 0f;
+			int wheel = 0;
+			for(Integer i : l){
+				if(wheel == 0 && i != -2){
+					tempRsrp = Float.valueOf(ncRsrp[i]);
+					lindex = i;
+				}else if(wheel == 0 && i == -2){
+					tempRsrp = srcrsrpvalue;
+					lindex = -2;
+					mainMark = 1;
+				}
+				if(i != -2 && Float.valueOf(ncRsrp[i]) > tempRsrp){
+					tempRsrp = Float.valueOf(ncRsrp[i]);
+					lindex= i;
+				}else if(i == -2 && srcrsrpvalue > tempRsrp){
+					tempRsrp = srcrsrpvalue;
+					lindex = -2;
+					mainMark = 1;
+				}
+				wheel ++;
+			}
+			lastIndex.add(lindex);
+		}
+		if(mainMark == 0 && !StringUtils.isBlank(srcEarfcn) 
+				&& !StringUtils.isBlank(srcrsrp)){
+			lastIndex.add(-2);
+		}
+
+		return lastIndex;
 	}
 
 	protected ONEWAYDELAY_CELL createOnwayDelayCell(LTEOrientUtil p, LteCellCfgInfo ncInfo, Double fRSRP, Double fTA) {

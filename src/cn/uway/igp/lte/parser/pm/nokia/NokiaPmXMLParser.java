@@ -51,7 +51,7 @@ public class NokiaPmXMLParser extends FileParser {
 	/** 数据记录map */
 	public Map<String, String> dataRecordMap = null;
 	
-	/**test file-stamptime*/
+	/**厂家文件中时间- file-stamptime*/
 	public String stamptime="";
 
 	public NokiaPmXMLParser() {
@@ -132,9 +132,6 @@ public class NokiaPmXMLParser extends FileParser {
 						} else if ("PMSetup".equalsIgnoreCase(tagName)) {
 							String timeStr = StringUtil.nvl(reader.getAttributeValue(null, "startTime"), "");
 							stamptime=timeStr.replace('T', ' ').substring(0, (timeStr.indexOf("+") - 4));
-							// this.dataRecordMap = new HashMap<String, String>();
-							// dataRecordMap.put("STAMPTIME",timeStr.replace('T', ' ').substring(0, (timeStr.indexOf("+") - 4)));
-							
 						}
 						break;
 					}
@@ -204,8 +201,9 @@ public class NokiaPmXMLParser extends FileParser {
 		// 公共回填字段
 		map.put("MMEID", String.valueOf(task.getExtraInfo().getOmcId()));
 		map.put("COLLECTTIME", TimeUtil.getDateString(new Date()));
-		//关闭回填,使用文件里的厂家starttime作stamptime
-		//map.put("STAMPTIME", TimeUtil.getDateString(this.currentDataTime));
+		if(StringUtil.isEmpty(map.get("STAMPTIME"))){
+			map.put("STAMPTIME", TimeUtil.getDateString(this.currentDataTime));
+		}
 		map.put("FILE_TIME", this.fileTime);
 		ParseOutRecord record = new ParseOutRecord();
 		record.setType(this.templet.getDataType());
@@ -270,8 +268,6 @@ public class NokiaPmXMLParser extends FileParser {
 		try {
 			// 文件名样例：etlexpmx_LNCEL_20140716110602_1094084.xml.gz
 			this.fileTime = fileName.substring(fileName.lastIndexOf("_") + 1, fileName.indexOf(".xml"));
-			if(this.fileTime.equals("1208729"))
-				System.err.println("444444%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			
 			/**
 			 * <pre>
