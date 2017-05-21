@@ -117,7 +117,10 @@
 	
 	<!-- lte eric pm(zip),file -->
 	<bean name="eric_pm_zip_file_parser" class="cn.uway.igp.lte.parser.pm.eric.EricPmZipXMLParser" scope="prototype"/>
-		
+	
+	<!-- lte eric pm(zip),new file 20170408 dpf -->
+	<bean name="eric_pm_zip_new_file_parser" class="cn.uway.igp.lte.parser.pm.eric.EricPmZipXMLNewParser" scope="prototype"/>
+	
 	<!-- lte alu cm,file -->
 	<bean name="alu_cm_file_parser" class="cn.uway.igp.lte.parser.cm.LucCmXMLParser" scope="prototype"/>
 	
@@ -142,6 +145,9 @@
 	
 	<!-- lte nokia pm,file 2016年9月28日 16:35:56 diao-->
 	<bean name="nokia_pm_file_proMix_parser" class="cn.uway.igp.lte.parser.pm.nokia.NokiaPmXMLProMixPaser" scope="prototype"/>
+	
+	<!-- lte nokia pm file adapter parse -->
+	<bean name="nokia_pm_file_adapter_parser" class="cn.uway.igp.lte.parser.pm.nokia.NokiaPmXMLAdpaterParser" scope="prototype"/>
 	
 	<!-- lte nokia cdr,xml file add 2015-06-11-->
 	<bean name="nokia_cdr_xml_file_parser" class="cn.uway.igp.lte.parser.cdr.nokia.NokiaCdrXMLParser" scope="prototype"/>
@@ -225,4 +231,5 @@
 	
 	<!--lte 诺西话单-->
 	<bean name="nokia_csv_file_parser" class="cn.uway.igp.lte.parser.cdr.nokia.NokiaCdrCsvParser" scope="prototype"/>
+	<bean name="redisParser" class="cn.uway.igp.lte.parser.redis.RedisDBParser"  scope="prototype" />
 </beans>

@@ -244,7 +244,8 @@
 	<!-- lte eric pm(zip) -->
 	<bean name="solution140523003" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
 		<property name="accessor" ref="ftpAccessor" />
-		<property name="parser" ref="eric_pm_zip_file_parser" />
+		<!-- <property name="parser" ref="eric_pm_zip_file_parser" /> -->
+		<property name="parser" ref="eric_pm_zip_new_file_parser" />
 		<property name="adaptiveStreamJobAvaliable" value="true" />
 	</bean>
 	
@@ -259,6 +260,7 @@
 	<bean name="solution140528001" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
 		<property name="accessor" ref="ftpAccessor" />
 		<property name="parser" ref="alu_cm_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
 	</bean>
 	<!-- lte alu pm -->
 	<bean name="solution140528002" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
@@ -289,6 +291,7 @@
 	<bean name="solution140529001" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
 		<property name="accessor" ref="ftpAccessor" />
 		<property name="parser" ref="nokia_cm_file_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
 	</bean>
 	<!-- lte nokia pm -->
 	<bean name="solution140529002" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
@@ -310,6 +313,12 @@
 	<bean name="solution140529005" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
 		<property name="accessor" ref="ftpAccessor" />
 		 <property name="parser" ref="nokia_pm_file_proMix_parser" /> 
+	</bean>
+	<!-- 在原先140529002的基础上增加自适应压缩格式解析 -->
+	<bean name="solution140529006" class="cn.uway.framework.solution.GatherSolution" scope="prototype">
+		<property name="accessor" ref="ftpAccessor" />
+		<property name="parser" ref="nokia_pm_file_adapter_parser" />
+		<property name="adaptiveStreamJobAvaliable" value="true" />
 	</bean>
 
 	
@@ -519,4 +528,9 @@
 		<property name="adaptiveStreamJobAvaliable" value="true" />
 	</bean>
 	
+	<bean name="solution518787888" class="cn.uway.framework.solution.GatherSolution"
+		scope="prototype">
+		<property name="accessor" ref="dbAccessor"/>
+		<property name="parser" ref="redisParser"/>
+	</bean>
 </beans>

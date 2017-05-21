@@ -281,7 +281,8 @@ public class EricCmXMLParser extends FileParser {
 								// ENBNAME为空，丢掉
 								if (ENBNAME == null) {
 									invalideNum++;
-									return hasNextRecord();
+									//修改之前的递归为返回空,文件中的某些错误会造成非常的递归，导致程序栈满异常
+									resultMap=null;
 								}
 								return true;
 							}
@@ -321,6 +322,9 @@ public class EricCmXMLParser extends FileParser {
 
 	@Override
 	public ParseOutRecord nextRecord() throws Exception {
+		if(resultMap==null){
+			return null;
+		}
 		readLineNum++;
 		ParseOutRecord record = new ParseOutRecord();
 		List<Field> fieldList = templet.getFieldList();
@@ -464,6 +468,8 @@ public class EricCmXMLParser extends FileParser {
 		try {
 			String fileName = FileUtil.getFileName(this.rawName);
 			String patternTime = StringUtil.getPattern(fileName, "\\d{8}");
+			if(patternTime==null)
+				patternTime=StringUtil.getPattern(fileName, "\\d{4}-\\d{1,2}-\\d{1,2}").replace("-", "");
 			if (patternTime != null) {
 				this.currentDataTime = TimeUtil.getyyyyMMddDate(patternTime);
 			} else {

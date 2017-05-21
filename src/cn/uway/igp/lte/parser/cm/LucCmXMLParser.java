@@ -284,7 +284,9 @@ public class LucCmXMLParser extends FileParser {
 	public void parseFileName() {
 		try {
 			String fileName = FileUtil.getFileName(this.rawName);
-			String patternTime = StringUtil.getPattern(fileName, "\\d{4}[-]\\d{2}[-]\\d{2}");
+			String patternTime = StringUtil.getPattern(fileName, "\\d{8}");
+			if(patternTime==null)
+				patternTime = StringUtil.getPattern(fileName, "\\d{4}[-]\\d{2}[-]\\d{2}");
 			patternTime = patternTime.replace("-", "");
 			if (patternTime != null) {
 				this.currentDataTime = TimeUtil.getyyyyMMddDate(patternTime);

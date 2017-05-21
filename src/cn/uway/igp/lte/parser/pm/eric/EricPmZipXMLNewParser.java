@@ -1,6 +1,5 @@
 package cn.uway.igp.lte.parser.pm.eric;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,90 +7,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import cn.uway.framework.accessor.AccessOutObject;
 import cn.uway.framework.parser.ParseOutRecord;
-import cn.uway.framework.parser.file.FileParser;
 import cn.uway.framework.parser.file.templet.Field;
-import cn.uway.framework.parser.file.templet.TempletParser;
-import cn.uway.igp.lte.templet.xml.EricPmXmlTempletParser;
 import cn.uway.util.FileUtil;
 import cn.uway.util.StringUtil;
 import cn.uway.util.TimeUtil;
 
 /**
- * lte eric性能解码器(xml格式)
- * 
- * @author yuy @ 24 May, 2014
+ * lte eric性能解码器,xml格式,新文件格式,关键字段名全变化,20170407，dpf
  */
-public class EricPmZipXMLParser extends FileParser {
+public class EricPmZipXMLNewParser extends EricPmZipXMLParser {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(EricPmZipXMLParser.class);
-
-	public static String myName = "";
-
-	public XMLStreamReader reader;
-
-	/** 输入zip流 */
-	public ZipInputStream zipstream;
-
-	/** 读取开关 */
-	public boolean openFlag = false;
-
-	/**
-	 * 缓存中的元素
-	 */
-	protected Map<MoElement, ParseOutRecord> temps;
-
-	/**
-	 * 当前正在解析的Mo对象
-	 */
-	protected MoElement currentMoElement = null;
-
-	/**
-	 * 公共数据域信息，解析自SN。每解析一个文件清空一次
-	 */
-	protected Map<String, String> commonFields = new HashMap<String, String>();
-
-	/**
-	 * 缓存对象
-	 */
-	protected List<ParseOutRecord> cacheElements = new LinkedList<ParseOutRecord>();
-
-	/**
-	 * 当前解析的MT节点缓存
-	 */
-	protected List<String> currentFields = new ArrayList<String>();
-
-	/**
-	 * 当前缓存中的MT对应的Value,即r节点
-	 */
-	protected List<String> currentValues = new ArrayList<String>();
-
-	public ZipEntry entry = null;
-
-	/** 数据源是否来源于ENIQ库 */
-	public boolean isFromENIQ = false;
-
-	/** ENIQ库--模板标识，不同于非ENIQ库 */
-	public String ENIQ_TEMPLET_FLAG = "_ENIQ";
-	
-	/** 输入流 */
-	protected InputStream rawFileStream;
-	
-	protected String entryName = null;
-
-	public EricPmZipXMLParser() {
+	public EricPmZipXMLNewParser() {
 		super();
 	}
 
@@ -100,65 +31,13 @@ public class EricPmZipXMLParser extends FileParser {
 	 * 
 	 * @param tmpfilename
 	 */
-	public EricPmZipXMLParser(String tmpfilename) {
+	public EricPmZipXMLNewParser(String tmpfilename) {
 		super(tmpfilename);
 	}
 
-	@Override
-	public void parse(AccessOutObject accessOutObject) throws Exception {
-		this.accessOutObject = accessOutObject;
-		this.before();
-		LOGGER.debug("开始解码:{}", accessOutObject.getRawAccessName());
-		// 解析模板 获取当前文件对应的templet
-		parseTemplet();
-		if(accessOutObject.getRawAccessName() != null 
-				&& accessOutObject.getRawAccessName().endsWith(".zip"))
-		{
-			rawFileStream = new ZipInputStream(inputStream);
-		}
-		else
-		{
-			rawFileStream = inputStream;
-		}
-		//tyler2016-7-29,解决文件格式有问题，只有<mt>，<r>标签时，下面集合会有值的问题；
-		currentFields.clear();
-		currentValues.clear();
-	}
+	private String entryName = null;
 
 	@Override
-	public boolean hasNextRecord() throws Exception {
-		// 如果缓存中有元素，则取缓存中的元素
-		if (cacheElements.size() > 0)
-			return true;
-		if(rawFileStream instanceof ZipInputStream)
-		{
-			entry = ((ZipInputStream)rawFileStream).getNextEntry();
-			if (entry == null)
-				return false;
-			entryName = entry.getName();
-		}
-		else
-		{
-			entryName = accessOutObject.getRawAccessName();
-		}
-		
-		setCurrentDataTime(entryName);
-		// 判断是否是ENIQ库的数据源，文件名如：*_osscounterfile_1.xml.gz
-		if (entryName.indexOf("osscounterfile") > -1)
-			isFromENIQ = true;
-		// TODO 硬编码 过滤TDD
-		// if(entry.getName().indexOf("TBJ") > 0)
-		// return hasNextRecord();
-		XMLInputFactory fac = XMLInputFactory.newInstance();
-		fac.setProperty("javax.xml.stream.supportDTD", false);
-		reader = fac.createXMLStreamReader(rawFileStream);
-		// 开始解码前，清空每个文件的公共消息
-		commonFields = new HashMap<String, String>();
-		parseNextFile();
-		// 递归，避免中间有一个空文件导致数据异常
-		return cacheElements.size() > 0 ? true : false;
-	}
-
 	public ParseOutRecord nextRecord() throws Exception {
 		if (cacheElements == null || cacheElements.size() <= 0)
 			return null;
@@ -186,7 +65,7 @@ public class EricPmZipXMLParser extends FileParser {
 	 * 2、mi：标记一种测量类型的结束<br>
 	 * 
 	 * @throws XMLStreamException
-	 */
+	 */ 
 	protected void parseNextFile() throws XMLStreamException {
 		temps = new HashMap<MoElement, ParseOutRecord>();
 		while (reader.hasNext()) {
@@ -236,21 +115,25 @@ public class EricPmZipXMLParser extends FileParser {
 
 	/**
 	 * 处理开始节点事件，只需要在关注的数据域事件：<br>
-	 * 1、SN：数据解析后是文件的全局数据<br>
-	 * 2、moid：标记具体的网元对象<br>
-	 * 3、mt：测量项<br>
+	 * 1、ileHeader.dnPrefix：数据解析后是文件的全局数据<br>
+	 * 2、measObjLdn：标记具体的网元对象<br>
+	 * 3、measType：测量项<br>
 	 * 4、r：测量项的值<br>
 	 * 
 	 * @param element
 	 * @throws XMLStreamException
 	 */
 	protected void handleBeginElement(TagElement element) throws XMLStreamException {
-		if (element.getName().equalsIgnoreCase("mt")) {
+		if (element.getName().equalsIgnoreCase("mt") || "measType".equalsIgnoreCase(element.getName())) {
 			currentFields.add(StringUtil.nvl(reader.getElementText(), ""));
 		} else if (element.getName().equalsIgnoreCase("r") && openFlag) {
 			currentValues.add(StringUtil.nvl(reader.getElementText(), ""));
-		} else if (element.getName().equalsIgnoreCase("moid")) {
-			String moid = StringUtil.nvl(reader.getElementText(), "");
+		} else if (element.getName().equalsIgnoreCase("moid") || "measValue".equalsIgnoreCase(element.getName())) {
+			String moid;
+			if (element.getName().equalsIgnoreCase("moid"))
+				moid = StringUtil.nvl(reader.getElementText(), "");
+			else
+				moid = StringUtil.nvl(reader.getAttributeValue(null, "measObjLdn"), "");
 			String[] moInfo = StringUtil.split(moid, ",");
 			List<String[]> moArrayList = new ArrayList<String[]>();
 			for (String str : moInfo) {
@@ -277,11 +160,15 @@ public class EricPmZipXMLParser extends FileParser {
 				outElement.setRecord(data);
 				temps.put(currentMoElement, outElement);
 			}
-		} else if (element.getName().equalsIgnoreCase("sn")) {
-			List<String[]> list = parseSN(reader.getElementText());
+		} else if (element.getName().equalsIgnoreCase("sn") || "fileHeader".equalsIgnoreCase(element.getName())) {
+			List<String[]> list;
+			if (element.getName().equalsIgnoreCase("sn"))
+				list = parseSN(reader.getElementText());
+			else
+				list = parseSN(reader.getAttributeValue(null, "dnPrefix"));
 			if (list == null || list.size() == 0) {
-				//修改 从entry 对象中取entryName 为直接使用entryName
-				//因为entry在<sn></sn>标签内容为空时它也为空 
+				// 修改 从entry 对象中取entryName 为直接使用entryName
+				// 因为entry在<sn></sn>标签内容为空时它也为空
 				String fileName = FileUtil.getFileName(entryName);
 				list = parseSN(fileName.substring(fileName.indexOf("_SubNetwork") + 1, fileName.lastIndexOf("_statsfile")));
 			}
@@ -293,19 +180,18 @@ public class EricPmZipXMLParser extends FileParser {
 
 	/**
 	 * 处理结束节点<br>
-	 * 1、当碰到mv节点结束的时候，处理缓存的MT和R节点的值，添加至输出对象中<br>
+	 * 1、当碰到mv或者measType节点结束的时候，处理缓存的MT和R节点的值，添加至输出对象中<br>
 	 * 2、1处理完成后，清空currentValues<br>
-	 * 3、碰到mi节点，清理currentFields
+	 * 3、碰到mi或者measValue节点，清理currentFields
 	 * 
 	 * @param element
-	 *            节点信息
 	 */
 	protected void handleEndElement(TagElement element) {
-		if ("mi".equalsIgnoreCase(element.getName())) {
+		if ("mi".equalsIgnoreCase(element.getName()) || "measInfo".equalsIgnoreCase(element.getName())) {
 			currentFields = new ArrayList<String>();
 			return;
 		}
-		if (!element.getName().equalsIgnoreCase("mv"))
+		if (!element.getName().equalsIgnoreCase("mv") && !"measValue".equalsIgnoreCase(element.getName()))
 			return;
 		// 没有打开标记，即没有找到模板，跳过
 		if (!openFlag)
@@ -350,111 +236,12 @@ public class EricPmZipXMLParser extends FileParser {
 		return null;
 	}
 
-	/**
-	 * 节点标签对象
-	 * 
-	 * @author chenrongqiang
-	 * @since 1.0
-	 * @version 1.0
-	 * @date 2014年6月19日
-	 */
-	class TagElement {
-
-		/**
-		 * 节点类型
-		 */
-		private int type;
-
-		/**
-		 * 节点名称
-		 */
-		private String name;
-
-		public TagElement(int type, String name) {
-			super();
-			this.type = type;
-			this.name = name;
-		}
-
-		public int getType() {
-			return type;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public boolean isBegin() {
-			return type == XMLStreamConstants.START_ELEMENT;
-		}
-
-		public boolean isEnd() {
-			return type == XMLStreamConstants.END_ELEMENT;
-		}
-	}
-
-	/**
-	 * 找到当前对应的Templet
-	 */
-	public boolean findTemplate(MoElement moElement) {
-		String templetMoid = moElement.getType();
-		if (isFromENIQ)
-			templetMoid += ENIQ_TEMPLET_FLAG;
-		templet = templetMap.get(templetMoid);// 这里的key全部转为大写字母
-		if (templet == null && "EUtranCellTDD".equals(moElement.getType())) {
-			templet = templetMap.get(isFromENIQ ? "EUtranCellFDD" + ENIQ_TEMPLET_FLAG : "EUtranCellFDD");
-		}
-		if (templet == null) {
-			LOGGER.debug("没有找到对应的模板，跳过，moid:{}", templetMoid);
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * 解析文件名
-	 * 
-	 * @throws Exception
-	 */
-	public void parseFileName() {
-		try {
-			String fileName = FileUtil.getFileName(this.rawName);
-			String patternTime = StringUtil.getPattern(fileName, "\\d{8}[.]\\d{4}");
-			if (patternTime != null) {
-				patternTime = patternTime.replace(".", "_");
-				this.currentDataTime = TimeUtil.getyyyyMMdd_HHmmDate(patternTime);
-			}
-		} catch (Exception e) {
-			LOGGER.debug("解析文件名异常", e);
-		}
-	}
-
-	@Override
-	public void close() {
-		// 标记解析结束时间
-		this.endTime = new Date();
-		LOGGER.debug("[{}]-爱立信性能XML解析，处理{}条记录", new Object[]{task.getId(), readLineNum});
-	}
-
-	/**
-	 * 解析模板 解析当前文件对应的Templet
-	 * 
-	 * @throws Exception
-	 */
-	public void parseTemplet() throws Exception {
-		// 解析模板
-		TempletParser templetParser = new EricPmXmlTempletParser();
-		templetParser.tempfilepath = templates;
-		templetParser.parseTemp();
-		templetMap = templetParser.getTemplets();
-	}
-
 	/* 解sn标签内容 */
 	public static List<String[]> parseSN(String moid) {
 		return parseKeyValue(moid, true);
 	}
 
-	/*
+	/**
 	 * 解析键值对字符串，即sn和moid标签中的内容，并存入有序列表。列表中的对象，是String数组， [0]为key,[1]为value. 参数str为要解析的字符串，isSN表示是否解析的是sn标签，sn标签中有同名的key，要特别处理。
 	 */
 	protected static List<String[]> parseKeyValue(String str, boolean isSN) {
@@ -492,39 +279,5 @@ public class EricPmZipXMLParser extends FileParser {
 			}
 		}
 		return list;
-	}
-
-	/**
-	 * 在List<String[]>中按key名查找value.
-	 */
-	public static String findByName(List<String[]> list, String name) {
-		if (list == null || name == null)
-			return "";
-		for (String[] arr : list) {
-			if (arr[0].equalsIgnoreCase(name))
-				return arr[1];
-		}
-		return "";
-	}
-	
-	/**
-	 * 特殊分拆处理器,重写<code>{@link FileParser#specialSplitHanlder}</code><br>
-	 * 因eric这里所做处理与框架中FileParser公共部分有少许不同,为了保证不修改框架,实现重写<br>
-	 * 20170105
-	 * @param field 
-	 * 			要处理的字段
-	 * @param str
-	 * 			属性字符串
-	 * @param map
-	 * 			即将入库的一条记录,结构<"属性名","属性值">
-	 */
-	public void specialSplitHanlder(Field field, String str, Map<String, String> map) {
-		if (StringUtil.isEmpty(str))
-			return;
-		String[] array = StringUtil.split(str, ",");
-		for (int n = 1; n < array.length-1; n++) {
-			map.put(field.getIndex() + "_" + array[n].trim(), array[++n].trim());
-		}
-		return;
 	}
 }
